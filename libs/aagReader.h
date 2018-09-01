@@ -16,7 +16,7 @@ private:
     ofstream debug;
     string word;
     char buf[250];
-
+    string file_name;
 public:
     AAGReader(string sourcePath);
     Aig* readFile();
