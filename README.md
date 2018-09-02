@@ -7,14 +7,14 @@ It's a simple reader aig (And-Inverter-Graph) writed in C++.
 If is your first time using the project, you will just need to:
 
 ```
-make build
+make
 ```
 
 But if you already used it, it's better run:
 
 ```
 make clean
-make build
+make
 ```
 
 ## Running instructions
@@ -22,10 +22,10 @@ make build
 It's just:
 
 ```
-./main ${NAME}
+./main ${FILE_NAME}
 ```
 
-**${NAME}:** It's the **file.aag** that you want to use as input. Example:
+**${FILE_NAME}:** It's the **file.aag** that you want to use as input. Example:
 
 ```
 ./main C432

@@ -31,6 +31,7 @@ public:
 
 class AndNode:public AigNode {
 private:
+    string name;
     AigNode* in0;
     AigNode* in1;
     bool in0Inverted;
@@ -41,6 +42,8 @@ private:
 
 public:
     AndNode();
+    void setName(string);
+    string getName();
     AigNodeType getType();
     void connectTo(AigNode*, int, int);
     AigNode* getFanIn(int);
@@ -99,6 +102,7 @@ private:
     list<AigNode*> nodes; //deve conter todos os nodos (and, entradas e saídas)
     list<InputNode*> inputs; //deve conter todas as entradas
     list<OutputNode*> outputs; //deve conter todas as saidas
+    list<AndNode*> ands;
 
 public:
     Aig();
@@ -106,8 +110,10 @@ public:
     list<InputNode*> getInputs();
     list<OutputNode*> getOutputs();
     list<AigNode*> getNodes();
+    list<AndNode*> getAndNodes();
     void insertNode(AigNode*);
     void insertInputNode(InputNode*);
     void insertOutputNode(OutputNode*);
+    void insertAndNode(AndNode*);
     void setName(string);
 };

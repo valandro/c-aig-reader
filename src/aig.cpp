@@ -6,6 +6,14 @@
 //------------------AndNode------------------
 AndNode::AndNode(){}
 
+void AndNode::setName(string newName){
+    this->name = newName;
+}
+
+string AndNode::getName(){
+    return this->name;
+}
+
 AigNodeType AndNode::getType(){
     return AND_NODE;
 }
@@ -177,6 +185,10 @@ list<OutputNode*> Aig::getOutputs(){
     return this->outputs;
 }
 
+list<AndNode*> Aig::getAndNodes(){
+    return this->ands;
+}
+
 list<AigNode*> Aig::getNodes(){
     return this->nodes;
 }
@@ -191,6 +203,10 @@ void Aig::insertInputNode(InputNode* inputNode) {
 
 void Aig::insertOutputNode(OutputNode* outputNode) {
 	outputs.push_back(outputNode);
+}
+
+void Aig::insertAndNode(AndNode* andNode) {
+	ands.push_back(andNode);
 }
 
 void Aig::setName(string newName){

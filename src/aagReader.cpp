@@ -107,12 +107,14 @@ Aig* AAGReader::readFile()
             strings.push_back(c);
         }
         AndNode* node_and = new AndNode();
-
+        node_and->setName(strings[0]);
         //Get input 1 pointer node
         InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
         if(input1 != NULL){
             int isInverted = this->isInverted(input1->getName());
             input1->connectTo(node_and,0,isInverted);
+        } else {
+
         }
         //Get input 2 pointer node
         InputNode* input2 = this->findInputNode(aig->getInputs(),strings[2]);
@@ -121,6 +123,7 @@ Aig* AAGReader::readFile()
             input2->connectTo(node_and,1,isInverted);
         }
         //Connect AND node to AIG
+        aig->insertAndNode(node_and);
         aig->insertNode(node_and);
     }
 
