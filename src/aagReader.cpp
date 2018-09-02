@@ -107,7 +107,11 @@ Aig* AAGReader::readFile()
             strings.push_back(c);
         }
         cout << "AND: " << strings[1] << endl;
-        this->findInputNode(aig->getInputs(),strings[1]);
+        //Get input1 pointer node
+        InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
+        if(input1 != NULL){
+            cout << "Value " << input1->getName() << endl;
+        }
         AndNode* node_and = new AndNode();
         
         aig->insertNode(node_and);
@@ -144,24 +148,26 @@ Aig* AAGReader::readFile()
 
 // Function to find Input node on aig inputs;
 InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
+    InputNode *node = NULL;
     size_t input_size = inputs.size();
     std::for_each(inputs.begin(), std::next(inputs.begin(),input_size),[&](InputNode* el) {
         const char* el_name = el->getName().c_str();
         if(strcmp(el_name,label.c_str()) == 0){
-            return el;
+            node = el;
         }
     });
-    return NULL;
+    return node;
 }
 
 // Function to find Output node on aig outputs;
 OutputNode* AAGReader::findOutputNode(list<OutputNode*> outputs, string label) {
+    OutputNode* node = NULL;
     size_t output_size = outputs.size();
     std::for_each(outputs.begin(), std::next(outputs.begin(),output_size),[&](OutputNode* el) {
         const char* el_name = el->getName().c_str();
         if(strcmp(el_name,label.c_str()) == 0){
-            return el;
+            node = el;
         }
     });
-    return NULL;
+    return node;
 }
