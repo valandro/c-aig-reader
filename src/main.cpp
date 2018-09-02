@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    string path_to_file = "input/" + std::string(argv[1]) + ".aag"; 
+    string path_to_file = "input/" + std::string(argv[1]) + ".aag";
     AAGReader reader(path_to_file);
     Aig* aig = reader.readFile();
     

@@ -7,7 +7,7 @@ AAGReader::AAGReader(string sourcePath)
     // Parsing the file name
     file_name = sourcePath.c_str();
     size_t dot = file_name.find(".aag");
-    file_name = file_name.substr(6,file_name.size()-1-dot);
+    file_name = file_name.substr(6,dot-6);
     // Open the file
     source.open(sourcePath.c_str());
 }
@@ -106,14 +106,21 @@ Aig* AAGReader::readFile()
         while(getline(line,c,' ')){
             strings.push_back(c);
         }
-        cout << "AND: " << strings[1] << endl;
-        //Get input1 pointer node
+        AndNode* node_and = new AndNode();
+
+        //Get input 1 pointer node
         InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
         if(input1 != NULL){
-            cout << "Value " << input1->getName() << endl;
+            int isInverted = this->isInverted(input1->getName());
+            input1->connectTo(node_and,0,isInverted);
         }
-        AndNode* node_and = new AndNode();
-        
+        //Get input 2 pointer node
+        InputNode* input2 = this->findInputNode(aig->getInputs(),strings[2]);
+        if(input2 != NULL){
+            int isInverted = this->isInverted(input2->getName());
+            input2->connectTo(node_and,1,isInverted);
+        }
+        //Connect AND node to AIG
         aig->insertNode(node_and);
     }
 
@@ -170,4 +177,14 @@ OutputNode* AAGReader::findOutputNode(list<OutputNode*> outputs, string label) {
         }
     });
     return node;
+}
+
+// Function to discover if the node is positive or negative;
+int AAGReader::isInverted(string label){
+    int logic = stoi(label);
+    if(logic % 2 == 0){
+        return 0;
+    } else {
+        return 1;
+    }
 }

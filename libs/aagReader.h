@@ -22,6 +22,7 @@ public:
     Aig* readFile();
     InputNode* findInputNode(list<InputNode*> list, string label);
     OutputNode* findOutputNode(list<OutputNode*> list, string label);
+    int isInverted(string label);
 };
 
 #endif // AAGREADER_H
