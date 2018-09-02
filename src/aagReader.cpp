@@ -108,19 +108,32 @@ Aig* AAGReader::readFile()
         }
         AndNode* node_and = new AndNode();
         node_and->setName(strings[0]);
+        
         //Get input 1 pointer node
         InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
         if(input1 != NULL){
-            int isInverted = this->isInverted(input1->getName());
-            input1->connectTo(node_and,0,isInverted);
+            int isInput1Inverted = this->isInverted(input1->getName());
+            input1->connectTo(node_and,0,isInput1Inverted);
         } else {
-
+            // So, the input 1 is a AND node
+            AndNode* and1 = this->findAndNode(aig->getAndNodes(),strings[1]);
+            if(and1 != NULL){
+                int isAnd1Inverted = this->isInverted(and1->getName());
+                and1->connectTo(node_and,0,isAnd1Inverted);
+            }
         }
         //Get input 2 pointer node
         InputNode* input2 = this->findInputNode(aig->getInputs(),strings[2]);
         if(input2 != NULL){
-            int isInverted = this->isInverted(input2->getName());
-            input2->connectTo(node_and,1,isInverted);
+            int isInput2Inverted = this->isInverted(input2->getName());
+            input2->connectTo(node_and,1,isInput2Inverted);
+        } else {
+             // So, the input 2 is a AND node
+            AndNode* and2 = this->findAndNode(aig->getAndNodes(),strings[2]);
+            if(and2 != NULL){
+                int isAnd2Inverted = this->isInverted(and2->getName());
+                and2->connectTo(node_and,1,isAnd2Inverted);
+            }
         }
         //Connect AND node to AIG
         aig->insertAndNode(node_and);
@@ -156,10 +169,16 @@ Aig* AAGReader::readFile()
     return aig;
 }
 
-// Function to find Input node on aig inputs;
+// Function to find Input node on aig inputs, inverted or not;
 InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
     InputNode *node = NULL;
     size_t input_size = inputs.size();
+    int node_label_int = stoi(label);
+    // If node is inverted, i should change the label;
+    if(node_label_int % 2 != 0){
+        node_label_int--;
+        label = std::to_string(node_label_int);
+    }
     std::for_each(inputs.begin(), std::next(inputs.begin(),input_size),[&](InputNode* el) {
         const char* el_name = el->getName().c_str();
         if(strcmp(el_name,label.c_str()) == 0){
@@ -169,11 +188,36 @@ InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
     return node;
 }
 
-// Function to find Output node on aig outputs;
+// Function to find Output node on aig outputs, inverted or not;
 OutputNode* AAGReader::findOutputNode(list<OutputNode*> outputs, string label) {
     OutputNode* node = NULL;
     size_t output_size = outputs.size();
+    int node_label_int = stoi(label);
+    // If node is inverted, i should change the label;
+    if(node_label_int % 2 != 0){
+        node_label_int--;
+        label = std::to_string(node_label_int);
+    }
     std::for_each(outputs.begin(), std::next(outputs.begin(),output_size),[&](OutputNode* el) {
+        const char* el_name = el->getName().c_str();
+        if(strcmp(el_name,label.c_str()) == 0){
+            node = el;
+        }
+    });
+    return node;
+}
+
+// Function to find And node on aig ands, inverted or not;
+AndNode* AAGReader::findAndNode(list<AndNode*> ands, string label) {
+    AndNode* node = NULL;
+    size_t ands_size = ands.size();
+    int node_label_int = stoi(label);
+    // If node is inverted, i should change the label;
+    if(node_label_int % 2 != 0){
+        node_label_int--;
+        label = std::to_string(node_label_int);
+    }
+    std::for_each(ands.begin(), std::next(ands.begin(),ands_size),[&](AndNode* el) {
         const char* el_name = el->getName().c_str();
         if(strcmp(el_name,label.c_str()) == 0){
             node = el;
