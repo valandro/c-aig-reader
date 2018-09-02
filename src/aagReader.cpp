@@ -1,6 +1,7 @@
 #include "aagReader.h"
 #include <string.h>
-#include<algorithm>
+#include <algorithm>
+#include <unistd.h>
 
 AAGReader::AAGReader(string sourcePath)
 {
@@ -8,8 +9,13 @@ AAGReader::AAGReader(string sourcePath)
     file_name = sourcePath.c_str();
     size_t dot = file_name.find(".aag");
     file_name = file_name.substr(6,dot-6);
-    // Open the file
-    source.open(sourcePath.c_str());
+    // Test if file exists then close it, to open again
+    std::ifstream ifile(sourcePath.c_str());
+    if((bool)ifile){
+        source.open(sourcePath.c_str());
+    } else {
+        cout << "File does not exist!!" << endl << endl;
+    }
 }
 
 Aig* AAGReader::readFile()
@@ -85,7 +91,7 @@ Aig* AAGReader::readFile()
         line.str(s);
         line >> word;
         // Set output label name
-        string name = "po" + std::to_string(i);
+        string name = word;
         OutputNode *output = new OutputNode();
         output->setName(name);
         aig->insertOutputNode(output);
@@ -108,7 +114,12 @@ Aig* AAGReader::readFile()
         }
         AndNode* node_and = new AndNode();
         node_and->setName(strings[0]);
-        
+        // Connect AND to output
+        OutputNode* output = this->findOutputNode(aig->getOutputs(),node_and->getName());
+        if(output != NULL){
+            int isOutputInverted = this->isInverted(output->getName());
+            node_and->connectTo(output,0,isOutputInverted);
+        }
         //Get input 1 pointer node
         InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
         if(input1 != NULL){
@@ -191,16 +202,25 @@ InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
 // Function to find Output node on aig outputs, inverted or not;
 OutputNode* AAGReader::findOutputNode(list<OutputNode*> outputs, string label) {
     OutputNode* node = NULL;
+    string positive_label;
+    string negative_label;
     size_t output_size = outputs.size();
     int node_label_int = stoi(label);
-    // If node is inverted, i should change the label;
+
+    // If node is inverted, i should get the positive_label;
     if(node_label_int % 2 != 0){
         node_label_int--;
-        label = std::to_string(node_label_int);
+        positive_label = std::to_string(node_label_int);
+    } else {
+        // If node is positive, i should get the negative_label;
+        node_label_int++;
+        negative_label = std::to_string(node_label_int);
     }
     std::for_each(outputs.begin(), std::next(outputs.begin(),output_size),[&](OutputNode* el) {
         const char* el_name = el->getName().c_str();
-        if(strcmp(el_name,label.c_str()) == 0){
+        if(strcmp(el_name,label.c_str()) == 0 || 
+           strcmp(el_name,positive_label.c_str()) == 0 ||
+           strcmp(el_name,negative_label.c_str()) == 0){
             node = el;
         }
     });
