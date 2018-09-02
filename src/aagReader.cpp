@@ -14,7 +14,7 @@ AAGReader::AAGReader(string sourcePath)
     if((bool)ifile){
         source.open(sourcePath.c_str());
     } else {
-        cout << "File does not exist!!" << endl << endl;
+        cout << "File does not exist!!!" << endl << endl;
     }
 }
 
@@ -23,7 +23,7 @@ Aig* AAGReader::readFile()
     Aig* aig = new Aig();
     aig->setName(file_name);
 
-    //Treating header
+    // Treating header
     source.getline(buf, 250, '\n');
     string s=buf;
     istringstream line;
@@ -64,7 +64,7 @@ Aig* AAGReader::readFile()
     OutputNode* outs = new OutputNode[nOutputs];
     InputNode* ins = new InputNode[nInputs];
 
-    //Treating inputs
+    // Treating inputs
     for (int i = 1; i <= nInputs; i++) {
         // Get input value
         source.getline(buf, sizeof(int), '\n');
@@ -81,7 +81,7 @@ Aig* AAGReader::readFile()
         debug << word << "\n";
     }
 
-    //Treating outputs
+    // Treating outputs
     debug << "\n";
     for (int i = 1; i <= nOutputs; i++) {        
         // Get ouput value
@@ -99,7 +99,7 @@ Aig* AAGReader::readFile()
         debug << word << "\n";
     }
 
-    //Connecting ands
+    // Connecting ands
     debug << "\n";
     for (int i = 1; i <= nAnds; i++) {
         // Get ouput value
@@ -114,39 +114,13 @@ Aig* AAGReader::readFile()
         }
         AndNode* node_and = new AndNode();
         node_and->setName(strings[0]);
-        // Connect AND to output
-        OutputNode* output = this->findOutputNode(aig->getOutputs(),node_and->getName());
-        if(output != NULL){
-            int isOutputInverted = this->isInverted(output->getName());
-            node_and->connectTo(output,0,isOutputInverted);
-        }
-        //Get input 1 pointer node
-        InputNode* input1 = this->findInputNode(aig->getInputs(),strings[1]);
-        if(input1 != NULL){
-            int isInput1Inverted = this->isInverted(input1->getName());
-            input1->connectTo(node_and,0,isInput1Inverted);
-        } else {
-            // So, the input 1 is a AND node
-            AndNode* and1 = this->findAndNode(aig->getAndNodes(),strings[1]);
-            if(and1 != NULL){
-                int isAnd1Inverted = this->isInverted(and1->getName());
-                and1->connectTo(node_and,0,isAnd1Inverted);
-            }
-        }
-        //Get input 2 pointer node
-        InputNode* input2 = this->findInputNode(aig->getInputs(),strings[2]);
-        if(input2 != NULL){
-            int isInput2Inverted = this->isInverted(input2->getName());
-            input2->connectTo(node_and,1,isInput2Inverted);
-        } else {
-             // So, the input 2 is a AND node
-            AndNode* and2 = this->findAndNode(aig->getAndNodes(),strings[2]);
-            if(and2 != NULL){
-                int isAnd2Inverted = this->isInverted(and2->getName());
-                and2->connectTo(node_and,1,isAnd2Inverted);
-            }
-        }
-        //Connect AND node to AIG
+        // Connect AND to output if is necessary
+        this->connectAndToOutput(node_and,aig);
+        // Connect input 1 to And node
+        this->connectInputToAndNode(node_and,aig,strings[1]);
+        // Connect input 2 to And node
+        this->connectInputToAndNode(node_and,aig,strings[2]);
+        // Connect AND node to AIG
         aig->insertAndNode(node_and);
         aig->insertNode(node_and);
     }
@@ -246,6 +220,40 @@ AndNode* AAGReader::findAndNode(list<AndNode*> ands, string label) {
     return node;
 }
 
+// Function to connect a input to And node
+void AAGReader::connectInputToAndNode(AndNode* node_and, Aig* aig, string input_label){
+    //Get input pointer node
+    InputNode* input = this->findInputNode(aig->getInputs(),input_label);
+    if(input != NULL){
+        int isInput1Inverted = this->isInverted(input->getName());
+        input->connectTo(node_and,0,isInput1Inverted);
+    } else {
+        // So, the input is a AND node
+        AndNode* and1 = this->findAndNode(aig->getAndNodes(),input_label);
+        if(and1 != NULL){
+            int isAnd1Inverted = this->isInverted(and1->getName());
+            and1->connectTo(node_and,0,isAnd1Inverted);
+        }
+    }
+}
+
+// Function to connect a And to Output
+void AAGReader::connectAndToOutput(AndNode* node_and, Aig* aig){
+    OutputNode* output = this->findOutputNode(aig->getOutputs(),node_and->getName());
+    if(output != NULL){
+        int isOutputInverted = this->isInverted(output->getName());
+        node_and->connectTo(output,0,isOutputInverted);
+    }
+}
+
+// Function to connect a Input to Output
+void AAGReader::connectInputToOutput(InputNode* node_input, Aig* aig){
+    OutputNode* output = this->findOutputNode(aig->getOutputs(),node_input->getName());
+    if(output != NULL){
+        int isOutputInverted = this->isInverted(output->getName());
+        node_input->connectTo(output,0,isOutputInverted);
+    }
+}
 // Function to discover if the node is positive or negative;
 int AAGReader::isInverted(string label){
     int logic = stoi(label);

@@ -23,6 +23,9 @@ public:
     InputNode* findInputNode(list<InputNode*> list, string label);
     OutputNode* findOutputNode(list<OutputNode*> list, string label);
     AndNode* findAndNode(list<AndNode*> list, string label);
+    void connectInputToAndNode(AndNode* node_and, Aig* aig, string input_label);
+    void connectAndToOutput(AndNode* node_and, Aig* aig);
+    void connectInputToOutput(InputNode* node_input, Aig* aig);
     int isInverted(string label);
 };
 
