@@ -97,17 +97,17 @@ class Aig {
 private:
     string name;
     list<AigNode*> nodes; //deve conter todos os nodos (and, entradas e saídas)
-    list<AigNode*> inputs; //deve conter todas as entradas
-    list<AigNode*> outputs; //deve conter todas as saidas
+    list<InputNode*> inputs; //deve conter todas as entradas
+    list<OutputNode*> outputs; //deve conter todas as saidas
 
 public:
     Aig();
     string getName();
-    list<AigNode*> getInputs();
-    list<AigNode*> getOutputs();
+    list<InputNode*> getInputs();
+    list<OutputNode*> getOutputs();
     list<AigNode*> getNodes();
     void insertNode(AigNode*);
-    void insertInputNode(AigNode*);
-    void insertOutputNode(AigNode*);
+    void insertInputNode(InputNode*);
+    void insertOutputNode(OutputNode*);
     void setName(string);
 };

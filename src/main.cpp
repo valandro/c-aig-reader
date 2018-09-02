@@ -69,7 +69,13 @@ int main(int argc, char** argv)
     // aig->insertOutputNode(out1); aig->insertNode(out1);
     // aig->insertOutputNode(out2); aig->insertNode(out2);
 
-    // //debuging
+    //Debuging
+    // std::list<InputNode*> out = aig->getInputs();
+    // size_t input_size = out.size();
+    // std::for_each(out.begin(), std::next(out.begin(),input_size),[](InputNode* el) {
+    //     std::cout << el->getName() << endl;
+    // });
+
     cout << "# name of AIG: " << aig->getName() << "\n";
     cout << "  * number of Nodes:   " << aig->getNodes().size() << "\n";
     cout << "  * number of Inputs:  " << aig->getInputs().size() << "\n";

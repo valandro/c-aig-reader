@@ -20,6 +20,8 @@ private:
 public:
     AAGReader(string sourcePath);
     Aig* readFile();
+    InputNode* findInputNode(list<InputNode*> list, string label);
+    OutputNode* findOutputNode(list<OutputNode*> list, string label);
 };
 
 #endif // AAGREADER_H

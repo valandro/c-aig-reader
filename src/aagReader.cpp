@@ -1,5 +1,6 @@
 #include "aagReader.h"
 #include <string.h>
+#include<algorithm>
 
 AAGReader::AAGReader(string sourcePath)
 {
@@ -58,7 +59,7 @@ Aig* AAGReader::readFile()
     InputNode* ins = new InputNode[nInputs];
 
     //Treating inputs
-    for (int i = 0; i < nInputs; i++) {
+    for (int i = 1; i <= nInputs; i++) {
         // Get input value
         source.getline(buf, sizeof(int), '\n');
         string s = buf;
@@ -66,17 +67,17 @@ Aig* AAGReader::readFile()
         line.str(s);
         line >> word;
         // Set input label name
-        string name = "pi" + std::to_string(i);
+        string name = word;
         InputNode *input = new InputNode();
         input->setName(name);
         aig->insertInputNode(input);
         aig->insertNode(input);
-        debug << word << "\n";    
+        debug << word << "\n";
     }
 
     //Treating outputs
     debug << "\n";
-    for (int i = 0; i < nOutputs; i++) {        
+    for (int i = 1; i <= nOutputs; i++) {        
         // Get ouput value
         source.getline(buf, sizeof(int), '\n');
         string s = buf;
@@ -89,14 +90,27 @@ Aig* AAGReader::readFile()
         output->setName(name);
         aig->insertOutputNode(output);
         aig->insertNode(output);
-        debug << word << "\n"; 
+        debug << word << "\n";
     }
 
     //Connecting ands
     debug << "\n";
-    for (int i = 0; i < nAnds; i++) {
-        debug << "read the and" << i << " output and inputs\n";
-        debug << "   connect the and" << i << " and set the inversion of this pins\n";
+    for (int i = 1; i <= nAnds; i++) {
+        // Get ouput value
+        vector<string> strings;
+        source.getline(buf, 3 * sizeof(int),'\n');
+        string s = buf;
+        string c;
+        istringstream line(s);
+        // Parsing the AND line > [and] [and] [and]
+        while(getline(line,c,' ')){
+            strings.push_back(c);
+        }
+        cout << "AND: " << strings[1] << endl;
+        this->findInputNode(aig->getInputs(),strings[1]);
+        AndNode* node_and = new AndNode();
+        
+        aig->insertNode(node_and);
     }
 
     debug << "\n";
@@ -126,4 +140,28 @@ Aig* AAGReader::readFile()
     
 
     return aig;
+}
+
+// Function to find Input node on aig inputs;
+InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
+    size_t input_size = inputs.size();
+    std::for_each(inputs.begin(), std::next(inputs.begin(),input_size),[&](InputNode* el) {
+        const char* el_name = el->getName().c_str();
+        if(strcmp(el_name,label.c_str()) == 0){
+            return el;
+        }
+    });
+    return NULL;
+}
+
+// Function to find Output node on aig outputs;
+OutputNode* AAGReader::findOutputNode(list<OutputNode*> outputs, string label) {
+    size_t output_size = outputs.size();
+    std::for_each(outputs.begin(), std::next(outputs.begin(),output_size),[&](OutputNode* el) {
+        const char* el_name = el->getName().c_str();
+        if(strcmp(el_name,label.c_str()) == 0){
+            return el;
+        }
+    });
+    return NULL;
 }

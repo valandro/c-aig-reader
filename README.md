@@ -72,10 +72,10 @@ After the input and output declaration, it's necessary to define the **AND opera
 And finally, the labels are defined with this format.
 
 ```javascript
-i0 pi0  //pi0: input 0 
-i1 pi1  //pi1: input 1
-i2 pi2  //pi2: input 2
-i3 pi3  //pi3: input 3
+i0 pi0  //pi0: input 1 
+i1 pi1  //pi1: input 2
+i2 pi2  //pi2: input 3
+i3 pi3  //pi3: input 4
 i4 pi4  //pi4: input 5
 o0 po0  //po0: output 0
 o1 po1  //po1: output 1

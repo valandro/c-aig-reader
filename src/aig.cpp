@@ -169,11 +169,11 @@ string Aig::getName(){
     return this->name;
 }
 
-list<AigNode*> Aig::getInputs(){
+list<InputNode*> Aig::getInputs(){
     return this->inputs;
 }
 
-list<AigNode*> Aig::getOutputs(){
+list<OutputNode*> Aig::getOutputs(){
     return this->outputs;
 }
 
@@ -185,11 +185,11 @@ void Aig::insertNode(AigNode* node) {
 	nodes.push_back(node);
 }
 
-void Aig::insertInputNode(AigNode* inputNode) {
-	inputs.push_back(inputNode);
+void Aig::insertInputNode(InputNode* inputNode) {
+    inputs.push_back(inputNode);
 }
 
-void Aig::insertOutputNode(AigNode* outputNode) {
+void Aig::insertOutputNode(OutputNode* outputNode) {
 	outputs.push_back(outputNode);
 }
 
