@@ -18,7 +18,7 @@ typedef enum {
 class AigNode {
 private:
     int ID;
-
+    string name;
 public: 
     virtual AigNodeType getType() = 0;
     virtual void connectTo(AigNode*, int, int) = 0;
@@ -27,6 +27,8 @@ public:
     virtual vector<AigNode*> getFanOut() = 0;
     virtual vector<bool> getInvertedFanOut() = 0;
     virtual void setFanIn(int, AigNode*, bool) = 0;
+    void setName(string);
+    string getName();
 };
 
 class AndNode:public AigNode {

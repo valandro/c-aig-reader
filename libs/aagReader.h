@@ -23,10 +23,11 @@ public:
     InputNode* findInputNode(list<InputNode*> list, string label);
     OutputNode* findOutputNode(list<OutputNode*> list, string label);
     AndNode* findAndNode(list<AndNode*> list, string label);
-    void connectInputToAndNode(AndNode* node_and, Aig* aig, string input_label);
+    void connectInputToAndNode(AndNode* node_and, Aig* aig, string input_labelm , int pin);
     void connectAndToOutput(AndNode* node_and, Aig* aig);
     void connectInputToOutput(InputNode* node_input, Aig* aig);
     int isInverted(string label);
+    void setFanInNames(AndNode* and_node, string fan0Name, string fan1Name);
 };
 
 #endif // AAGREADER_H

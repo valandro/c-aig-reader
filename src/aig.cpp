@@ -166,17 +166,18 @@ void OutputNode::setFanIn(int index, AigNode * node, bool isInverted){
         this->in0Inverted = isInverted;
     }
 }
+//----------------AIGNODE----------------
+void AigNode::setName(string newName){
+    this->name = newName;
+}
 
+string AigNode::getName(){
+    return this->name;
+}
 //------------------AIG------------------
-
 Aig::Aig(){
 
 }
-
-string Aig::getName(){
-    return this->name;
-}
-
 list<InputNode*> Aig::getInputs(){
     return this->inputs;
 }
@@ -211,6 +212,9 @@ void Aig::insertAndNode(AndNode* andNode) {
 
 void Aig::setName(string newName){
     this->name = newName;
+}
+string Aig::getName(){
+    return this->name;
 }
 
 

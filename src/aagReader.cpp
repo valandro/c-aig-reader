@@ -117,9 +117,12 @@ Aig* AAGReader::readFile()
         // Connect AND to output if is necessary
         this->connectAndToOutput(node_and,aig);
         // Connect input 1 to And node
-        this->connectInputToAndNode(node_and,aig,strings[1]);
+        this->connectInputToAndNode(node_and,aig,strings[1],0);
         // Connect input 2 to And node
-        this->connectInputToAndNode(node_and,aig,strings[2]);
+        this->connectInputToAndNode(node_and,aig,strings[2],1);
+        // Set fan in names
+        this->setFanInNames(node_and, strings[1], strings[2]);
+    
         // Connect AND node to AIG
         aig->insertAndNode(node_and);
         aig->insertNode(node_and);
@@ -221,18 +224,18 @@ AndNode* AAGReader::findAndNode(list<AndNode*> ands, string label) {
 }
 
 // Function to connect a input to And node
-void AAGReader::connectInputToAndNode(AndNode* node_and, Aig* aig, string input_label){
+void AAGReader::connectInputToAndNode(AndNode* node_and, Aig* aig, string input_label, int pin){
     //Get input pointer node
     InputNode* input = this->findInputNode(aig->getInputs(),input_label);
     if(input != NULL){
         int isInput1Inverted = this->isInverted(input->getName());
-        input->connectTo(node_and,0,isInput1Inverted);
+        input->connectTo(node_and,pin,isInput1Inverted);
     } else {
         // So, the input is a AND node
         AndNode* and1 = this->findAndNode(aig->getAndNodes(),input_label);
         if(and1 != NULL){
             int isAnd1Inverted = this->isInverted(and1->getName());
-            and1->connectTo(node_and,0,isAnd1Inverted);
+            and1->connectTo(node_and,pin,isAnd1Inverted);
         }
     }
 }
@@ -262,4 +265,12 @@ int AAGReader::isInverted(string label){
     } else {
         return 1;
     }
+}
+
+// Function to set Fan in names
+void AAGReader::setFanInNames(AndNode* and_node, string fan0Name, string fan1Name){
+    AigNode* fan0 = and_node->getFanIn(0);
+    AigNode* fan1 = and_node->getFanIn(1);
+    fan0->setName(fan0Name);
+    fan1->setName(fan1Name);
 }
