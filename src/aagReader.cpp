@@ -122,7 +122,6 @@ Aig* AAGReader::readFile()
         this->connectInputToAndNode(node_and,aig,strings[2],1);
         // Set fan in names
         this->setFanInNames(node_and, strings[1], strings[2]);
-    
         // Connect AND node to AIG
         aig->insertAndNode(node_and);
         aig->insertNode(node_and);
@@ -162,14 +161,22 @@ InputNode* AAGReader::findInputNode(list<InputNode*> inputs, string label) {
     InputNode *node = NULL;
     size_t input_size = inputs.size();
     int node_label_int = stoi(label);
-    // If node is inverted, i should change the label;
+    string positive_label;
+    string negative_label;
+    // If node is inverted, i should get the positive_label;
     if(node_label_int % 2 != 0){
         node_label_int--;
-        label = std::to_string(node_label_int);
+        positive_label = std::to_string(node_label_int);
+    } else {
+        // If node is positive, i should get the negative_label;
+        node_label_int++;
+        negative_label = std::to_string(node_label_int);
     }
     std::for_each(inputs.begin(), std::next(inputs.begin(),input_size),[&](InputNode* el) {
         const char* el_name = el->getName().c_str();
-        if(strcmp(el_name,label.c_str()) == 0){
+        if(strcmp(el_name,label.c_str()) == 0 || 
+           strcmp(el_name,positive_label.c_str()) == 0 ||
+           strcmp(el_name,negative_label.c_str()) == 0){
             node = el;
         }
     });
@@ -209,14 +216,22 @@ AndNode* AAGReader::findAndNode(list<AndNode*> ands, string label) {
     AndNode* node = NULL;
     size_t ands_size = ands.size();
     int node_label_int = stoi(label);
-    // If node is inverted, i should change the label;
+    string positive_label;
+    string negative_label;
+    // If node is inverted, i should get the positive_label;
     if(node_label_int % 2 != 0){
         node_label_int--;
-        label = std::to_string(node_label_int);
+        positive_label = std::to_string(node_label_int);
+    } else {
+        // If node is positive, i should get the negative_label;
+        node_label_int++;
+        negative_label = std::to_string(node_label_int);
     }
     std::for_each(ands.begin(), std::next(ands.begin(),ands_size),[&](AndNode* el) {
         const char* el_name = el->getName().c_str();
-        if(strcmp(el_name,label.c_str()) == 0){
+        if(strcmp(el_name,label.c_str()) == 0 || 
+           strcmp(el_name,positive_label.c_str()) == 0 ||
+           strcmp(el_name,negative_label.c_str()) == 0){
             node = el;
         }
     });

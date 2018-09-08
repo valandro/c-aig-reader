@@ -24,7 +24,7 @@ void AndNode::connectTo(AigNode * dest, int pin, int isInverted){
 
     dest->setFanIn(pin,this,isInverted);
 }
-   
+
 AigNode* AndNode::getFanIn(int index){
     if(index == 0) return this->in0;
     else if(index == 1) return this->in1;
@@ -199,15 +199,15 @@ void Aig::insertNode(AigNode* node) {
 }
 
 void Aig::insertInputNode(InputNode* inputNode) {
-    inputs.push_back(inputNode);
+    this->inputs.push_back(inputNode);
 }
 
 void Aig::insertOutputNode(OutputNode* outputNode) {
-	outputs.push_back(outputNode);
+	this->outputs.push_back(outputNode);
 }
 
 void Aig::insertAndNode(AndNode* andNode) {
-	ands.push_back(andNode);
+	this->ands.push_back(andNode);
 }
 
 void Aig::setName(string newName){
