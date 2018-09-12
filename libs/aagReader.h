@@ -28,6 +28,7 @@ public:
     void connectInputToOutput(InputNode* node_input, Aig* aig);
     int isInverted(string label);
     void setFanInNames(AndNode* and_node, string fan0Name, string fan1Name);
+    int compute_depth(AigNode* node);
 };
 
 #endif // AAGREADER_H
