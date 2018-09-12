@@ -2,6 +2,10 @@
 
 It's a simple reader aig (And-Inverter-Graph) writed in C++.
 
+## Environment
+
+g++ (Ubuntu 7.3.0-16ubuntu3) 7.3.0
+
 ## Compile instructions
 
 If is your first time using the project, you will just need to:
