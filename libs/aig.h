@@ -19,7 +19,9 @@ class AigNode {
 private:
     int ID;
     string name;
+    int depth;
 public: 
+    AigNode();
     virtual AigNodeType getType() = 0;
     virtual void connectTo(AigNode*, int, int) = 0;
     virtual AigNode* getFanIn(int) = 0;
@@ -27,8 +29,11 @@ public:
     virtual vector<AigNode*> getFanOut() = 0;
     virtual vector<bool> getInvertedFanOut() = 0;
     virtual void setFanIn(int, AigNode*, bool) = 0;
+    int compute_depth(AigNode* node);
     void setName(string);
     string getName();
+    void setDepth(int);
+    int getDepth();
 };
 
 class AndNode:public AigNode {
@@ -118,4 +123,5 @@ public:
     void insertOutputNode(OutputNode*);
     void insertAndNode(AndNode*);
     void setName(string);
+    int compute_depth(AigNode*);
 };

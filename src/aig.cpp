@@ -167,12 +167,20 @@ void OutputNode::setFanIn(int index, AigNode * node, bool isInverted){
     }
 }
 //----------------AIGNODE----------------
+AigNode::AigNode(){
+    this->setDepth(-1);
+}
 void AigNode::setName(string newName){
     this->name = newName;
 }
-
 string AigNode::getName(){
     return this->name;
+}
+void AigNode::setDepth(int depth){
+    this->depth = depth;
+}
+int AigNode::getDepth(){
+    return this->depth;
 }
 //------------------AIG------------------
 Aig::Aig(){
@@ -217,4 +225,32 @@ string Aig::getName(){
     return this->name;
 }
 
-
+// Calculate depth
+int Aig::compute_depth(AigNode* node){
+    // Set initial depths
+    int depthIn1 = -1;
+    int depthIn2 = -1;
+    // Input then return 0.
+    if(node->getType() == INPUT_NODE){
+     return 0;   
+    } else {
+        // If FanIn exists, and already has a depth, than set a new Depth.
+        if(node->getFanIn(0) != NULL && node->getFanIn(0)->getDepth() > -1) {
+            depthIn1 = node->getFanIn(0)->getDepth();
+        }
+         else {
+            // If hasnt, then compute_depth again
+            depthIn1 = Aig::compute_depth(node->getFanIn(0));
+        }
+        if(node->getType() == AND_NODE) {
+            // Only AND nodes has a second FanIn
+            if(node->getFanIn(1) != NULL && node->getFanIn(1)->getDepth() > -1) {
+                depthIn2 = node->getFanIn(1)->getDepth();
+            } else {
+                depthIn2 = Aig::compute_depth(node->getFanIn(1));
+            }
+        }
+       // Return the max value between plus 1.
+       return std::max(depthIn1,depthIn2) + 1;
+    }
+}

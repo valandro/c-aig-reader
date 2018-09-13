@@ -289,16 +289,3 @@ void AAGReader::setFanInNames(AndNode* and_node, string fan0Name, string fan1Nam
     fan0->setName(fan0Name);
     fan1->setName(fan1Name);
 }
-
-// Calculate depth
-int AAGReader::compute_depth(AigNode* node){
-    if(node->getType() == 1){
-     return 0;   
-    } else {
-        // TODO: Pegar os inputs dos AndNodes*
-        int depthIn1 = compute_depth();
-        int depthIn2 = compute_depth();
-
-        return std::max(depthIn1,depthIn2) + 1;
-    }
-}
