@@ -1,0 +1,28 @@
+digraph {
+  size="6,6";
+  rankdir="LR";
+  {
+   2 [shape=plaintext]
+   4 [shape=plaintext]
+   6 [shape=plaintext]
+   8 [shape=plaintext]
+   10 [shape=plaintext]
+   PO0 [shape=plaintext]
+   PO1 [shape=plaintext]
+  }
+  
+  2 -> 12
+  6 -> 12
+  6 -> 14
+  8 -> 14
+  14 -> 16 [style=dashed]
+  4 -> 16
+  16 -> 18 [style=dashed]
+  12 -> 18 [style=dashed]
+  18 -> PO0
+  10 -> 20
+  14 -> 20 [style=dashed]
+  16 -> 22 [style=dashed]
+  20 -> 22 [style=dashed]
+  22 -> PO1
+}

@@ -40,7 +40,7 @@ All the **.aag** files are in **input** folder.
 
 Example: C17.aag
 
-![C17 AIG Graph](/images/C17.jpeg)
+![C17 AIG Graph](/images/C17.png)
 
 ```javascript
 aag 11 5 0 2 6
