@@ -1,12 +1,13 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 # READER AIG
 
 It's a simple reader aig (And-Inverter-Graph) writed in C++.
 
-## Environment
+### Environment
 
 g++ (Ubuntu 7.3.0-16ubuntu3) 7.3.0
 
-## Compile instructions
+### Compile instructions
 
 If is your first time using the project, you will just need to:
 
@@ -21,7 +22,7 @@ make clean
 make
 ```
 
-## Running instructions
+### Running instructions
 
 It's just:
 
@@ -36,7 +37,7 @@ It's just:
 ```
 All the **.aag** files are in **input** folder.
 
-## Understanding .agg files
+### Understanding .agg files
 
 Example: C17.aag
 
@@ -86,6 +87,9 @@ i4 pi4  //pi4: input 5
 o0 po0  //po0: output 0
 o1 po1  //po1: output 1
 ```
-## Copyright
+### Copyright
 
-The source code was written by Prof. Andre Reis - UFRGS. I just made changes for increase his solution.
+The source code was written by Prof. Andre Reis - UFRGS, but I made changes for increase his solution.
+
+### License
+MIT License. [Click here for more information.](LICENSE)
